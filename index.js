@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();  
 const fs = require('fs')
+const ejs = require('ejs')
 const cheerio = require('cheerio');
 const request = require('request');
 
@@ -35,10 +36,17 @@ app.use(express.static(__dirname + '/public'))
 app.engine('ejs', require('ejs').renderFile)
 app.set('view engine', 'ejs')
 
-app.get('/search', function(req, res) {
+app.get('/', (req, res) => {
+    let meteo = null
+res.render("index", {meteo: meteo})
+})
+
+app.post('/search', function(req, res) {
+    const  Ville = req.body.ville
+    console.log(Ville)
     request({
         method: 'GET',
-        url: 'https://www.google.com/search?q=meteo+batna&oq=meteo+batna&aqs=chrome..69i57j0l5.5191j1j4&sourceid=chrome&ie=UTF-8'
+        url: 'https://www.google.com/search?q=meteo+'+Ville+'+&oq=meteo+'+Ville+'&aqs=chrome..69i57j0l5.5191j1j4&sourceid=chrome&ie=UTF-8'
     }, (err,ress, body) => {
     
         if (err) return console.error(err);
@@ -49,7 +57,7 @@ app.get('/search', function(req, res) {
     console.log(fpEl)
 
        
-            return res.send("<h1>"+fpEl+"</h1>")
+            return res.render("index", {meteo: fpEl})
 
     });
    
