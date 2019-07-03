@@ -31,9 +31,11 @@ const request = require('request');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.use(express.static(__dirname + '/public'))
+app.engine('ejs', require('ejs').renderFile)
+app.set('view engine', 'ejs')
 
-
-app.get('/', function(req, res) {
+app.get('/search', function(req, res) {
     request({
         method: 'GET',
         url: 'https://www.google.com/search?q=meteo+batna&oq=meteo+batna&aqs=chrome..69i57j0l5.5191j1j4&sourceid=chrome&ie=UTF-8'
@@ -46,11 +48,9 @@ app.get('/', function(req, res) {
     let fpEl = $('.BNeawe').find($('.iBp4i').find($('.AP7Wnd'))).text();
     console.log(fpEl)
 
-        fs.writeFile("meteo.html",body,(err) => {
-            if (err) console.log(err);
-            console.log("Successfully Written to File.");
+       
             return res.send("<h1>"+fpEl+"</h1>")
-          });
+
     });
    
 });
